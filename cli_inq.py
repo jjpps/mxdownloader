@@ -1,5 +1,5 @@
 from InquirerPy import inquirer
-from functions import handle_download_options, search_manga, extract_id_from_url
+from functions import handle_download_options, search_manga, extract_id_from_url,create_config_file
 
 
 
@@ -30,6 +30,7 @@ def main():
             choices=[
                 "Enter URL",
                 "Search for manga",
+                "Create Config File",
                 "Exit"
             ],
             vi_mode=True, 
@@ -63,5 +64,14 @@ def main():
                     handle_download_options(selected_manga_id)
             else:
                 print("No results found for that title.")
+        elif main_action =="Create Config File":
+            config_file_path = inquirer.text(message="Type path to config file (Enter for Default)").execute()
+            folder_path =inquirer.text(message="Type path to manga storage folder (Enter for Default)").execute()
+            create_config_file(config_file_path,folder_path)
+            
+
+            
+                
+
 if __name__ == "__main__":
     main()
