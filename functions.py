@@ -132,7 +132,7 @@ def download_single_chapter(chapter_id):
     config_dir = config.get("settings", "path", fallback="~/Downloads/Manga")
     base_dir = os.path.expanduser(config_dir)
     manga_dir = os.path.join(base_dir, remove_forbiden_windows_char(manga_title))
-    chapter_dir = os.path.join(manga_dir, f"{manga_title}_Chapter_{chapter_no}")
+    chapter_dir = os.path.join(manga_dir, f"{remove_forbiden_windows_char(manga_title)}_Chapter_{chapter_no}")
     if not os.path.exists(chapter_dir):
         os.makedirs(chapter_dir)
 
@@ -170,7 +170,7 @@ def download_multiple_chapter(chapter_id):
     config_dir = config.get("settings", "path", fallback="~/Downloads/Manga")
     base_dir = os.path.expanduser(config_dir)
     manga_dir = os.path.join(base_dir, remove_forbiden_windows_char(manga_title))
-    chapter_dir = os.path.join(manga_dir, f"{manga_title}_Chapter_{chapter_no}")
+    chapter_dir = os.path.join(manga_dir, f"{remove_forbiden_windows_char(manga_title)}_Chapter_{chapter_no}")
     if not os.path.exists(chapter_dir):
         os.makedirs(chapter_dir)
 
@@ -306,11 +306,13 @@ def handle_download_options(manga_id):
         elif options == "Go Back":
             return  # Go back to the main menu
 def create_config_file(config_file_path,manga_folder_path):
-    with open(f'{"." if config_file_path is '' else config_file_path}/config.ini','w') as file:
+    with open(f'{"." if config_file_path == '' else config_file_path}/config.ini','w') as file:
         file.write("[settings]\n")
-        file.write(f"path = {"." if manga_folder_path is '' else manga_folder_path}/Manga/")
-        os.mkdir(f"{"." if manga_folder_path is '' else manga_folder_path}/Manga/")
+        file.write(f"path = {"." if manga_folder_path == '' else manga_folder_path}/Manga/")
+        os.mkdir(f"{"." if manga_folder_path == '' else manga_folder_path}/Manga/")
 
 def remove_forbiden_windows_char(manga_title):
-    forbiden_chars='? : < > | \\ / * "'
-    return manga_title.translate(str.maketrans('', '', forbiden_chars))
+    forbiden_chars=['?', ':', '<', '>', '|', '\\', '/', '*', '"']
+    for char in forbiden_chars:
+        manga_title = manga_title.replace(char, '')
+    return manga_title
